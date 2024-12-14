@@ -11,7 +11,7 @@ import { connectDB } from './db/connectDb.js';
 import path from "path";
 import passport from "passport";
 import session from "express-session";
-import { fstat } from 'fs';
+import { buildContext } from "graphql-passport";
 import ConnectMongoDBSession from 'connect-mongodb-session';
 import { configurePassport } from './passport/passport.config.js';
 
@@ -52,13 +52,13 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginDrainHttpServer({httpServer})]
 })
  
-
-
 await server.start();
 app.use('/graphql', cors({
   origin: "http://localhost:3000",
   credentials: true,
-}), express.json(), expressMiddleware(server,{
+}),
+express.json(),
+expressMiddleware(server,{
   context: async({req,res}) => buildContext({req,res})
 }));
 await new Promise(resolve => httpServer.listen({port: 4000}, resolve));
