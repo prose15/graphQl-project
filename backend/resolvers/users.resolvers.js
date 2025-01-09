@@ -57,8 +57,9 @@ const userResolvers = {
 				throw new Error(err.message || "Internal server error");
 			}
 		},
-        login: async (_,{username,password},context) =>{
+        login: async (_,{input},context) =>{
             try{
+                const {username,password} = input;
                 if(!username || !password) throw new Error("All the fiels Required")
                 const {user} = await context.authenticate("graphql-local",{username,password});
                 await context.login(user)
