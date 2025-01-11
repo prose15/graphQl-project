@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { GET_TRANSACTION, GET_TRANSACTION_STATISTICS } from "../graphql/queries/transaction.query";
+import { UPDATE_TRANSACTION } from "../graphql/mutations/transcation.mutation";
+import toast from "react-hot-toast";
+import TransactionFormSkeleton from "../components/skeletons/TransactionFormSkeleton";
 
 const TransactionPage = () => {
 	const [formData, setFormData] = useState({
@@ -10,9 +16,35 @@ const TransactionPage = () => {
 		date: "",
 	});
 
+	const {id} = useParams()
+	console.log(id);
+	const { loading, data } = useQuery(GET_TRANSACTION, {
+		variables: { transactionId: id },
+	});
+	console.log("Transaction", data);
+
+	const [updateTransaction] = useMutation(UPDATE_TRANSACTION, {
+		refetchQueries: [{ query: GET_TRANSACTION_STATISTICS }],
+	});
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("formData", formData);
+		e.preventDefault();
+		const amount = parseFloat(formData.amount);
+		try {
+			await updateTransaction({
+				variables: {
+					input: {
+						...formData,
+						amount,
+						transactionId: id,
+					},
+				},
+			});
+			toast.success("Transaction updated successfully");
+		} catch (error) {
+			toast.error(error.message);
+		}
 	};
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -22,7 +54,20 @@ const TransactionPage = () => {
 		}));
 	};
 
-	// if (loading) return <TransactionFormSkeleton />;
+	useEffect(() => {
+		if (data) {
+			setFormData({
+				description: data?.transaction?.description,
+				paymentType: data?.transaction?.paymentType,
+				category: data?.transaction?.category,
+				amount: data?.transaction?.amount,
+				location: data?.transaction?.location,
+				date: new Date(+data.transaction.date).toISOString().substr(0, 10),
+			});
+		}
+	}, [data]);
+
+	if (loading) return <TransactionFormSkeleton />;
 
 	return (
 		<div className='h-screen max-w-4xl mx-auto flex flex-col items-center'>

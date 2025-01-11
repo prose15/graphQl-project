@@ -15,22 +15,18 @@ export const GET_TRANSACTIONS = gql`
 `;
 
 export const GET_TRANSACTION = gql`
-	query GetTransaction($id: ID!) {
-		transaction(transactionId: $id) {
-			_id
-			description
-			paymentType
-			category
-			amount
-			location
-			date
-			user {
-				name
-				username
-				profilePicture
-			}
-		}
-	}
+query Transaction($transactionId: ID!) {
+  transaction(transactionId: $transactionId) {
+    _id
+    userId
+    description
+    paymentType
+    category
+    amount
+    location
+    date
+  }
+}
 `;
 
 export const GET_TRANSACTION_STATISTICS = gql`

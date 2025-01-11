@@ -28,7 +28,7 @@ const HomePage = () => {
 			},
 		],
 	};
-	const [logout] = useMutation(LOGOUT,{
+	const [logout,{client}] = useMutation(LOGOUT,{
 		refetchQueries:[GET_AUTHENTICATED_USER]
 	})
 
@@ -37,7 +37,7 @@ const HomePage = () => {
 			await logout();
 			// Clear the Apollo Client cache FROM THE DOCS
 			// https://www.apollographql.com/docs/react/caching/advanced-topics/#:~:text=Resetting%20the%20cache,any%20of%20your%20active%20queries
-			// client.resetStore();
+			client.resetStore();
 		} catch (error) {
 			console.error("Error logging out:", error);
 			toast.error(error.message);
