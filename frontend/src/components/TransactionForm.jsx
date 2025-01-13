@@ -28,9 +28,9 @@ const TransactionForm = () => {
 			form.reset()
 			toast.success('Created Successfully')
 		} catch (error) {
-			console.log(error);
 			toast.error(error)
-		}
+			console.log(error)
+				}
 
 	};
 

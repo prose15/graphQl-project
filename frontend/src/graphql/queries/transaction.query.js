@@ -30,10 +30,10 @@ query Transaction($transactionId: ID!) {
 `;
 
 export const GET_TRANSACTION_STATISTICS = gql`
-	query GetTransactionStatistics {
-		categoryStatistics {
-			category
-			totalAmount
-		}
+	query CategoryStatistics {
+	categoryStatistics {
+		category
+		totalAmount
+	}
 	}
 `;
