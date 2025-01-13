@@ -14,6 +14,7 @@ import session from "express-session";
 import { buildContext } from "graphql-passport";
 import ConnectMongoDBSession from 'connect-mongodb-session';
 import { configurePassport } from './passport/passport.config.js';
+import job from './cron.js';
 
 
 const app = express();
@@ -21,6 +22,10 @@ const httpServer = http.createServer(app);
 
 dotenv.config()
 configurePassport()
+
+job.start()
+
+const __dirname = path.resolve();
 
 const MongoDBStore = ConnectMongoDBSession(session)
 const store = new MongoDBStore({
@@ -62,5 +67,9 @@ expressMiddleware(server,{
   context: async({req,res}) => buildContext({req,res})
 }));
 await new Promise(resolve => httpServer.listen({port: 4000}, resolve));
+app.use(express.static(path.join(__dirname, "frontend/dist")));
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend/dist", "index.html"));
+});
 await connectDB();
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);
