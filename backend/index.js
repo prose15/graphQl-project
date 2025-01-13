@@ -58,7 +58,7 @@ const server = new ApolloServer({
  
 await server.start();
 app.use('/graphql', cors({
-  origin: "http://localhost:3000",
+  origin: "https://graphql-project-gqu1.onrender.com/login",
   credentials: true,
 }),
 express.json(),
