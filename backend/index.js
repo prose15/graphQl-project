@@ -7,15 +7,14 @@ import cors from 'cors';
 import mergedTypeDef from "./typeDefs/index.js"
 import mergedResolvers from "./resolvers/index.js"
 import dotenv from "dotenv";
-import { connectDB } from './db/connectDb.js';
 import path from "path";
 import passport from "passport";
 import session from "express-session";
 import { buildContext } from "graphql-passport";
-import ConnectMongoDBSession from 'connect-mongodb-session';
-import { configurePassport } from './passport/passport.config.js';
-import job from './cron.js';
-
+import ConnectMongoDBSession from "connect-mongodb-session";
+import { configurePassport } from "./passport/passport.config.js";
+import job from "./cron.js";
+import {connectDB}from "./db/connectDB.js"
 
 const app = express();
 const httpServer = http.createServer(app);
